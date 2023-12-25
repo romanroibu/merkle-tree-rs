@@ -108,3 +108,112 @@ fn test_index_from_location() {
         Index(14)
     );
 }
+
+#[test]
+fn test_location_from_index() {
+    assert_eq!(
+        Location::from(Index(0)),
+        Location {
+            depth: 0,
+            offset: 0
+        }
+    );
+    assert_eq!(
+        Location::from(Index(1)),
+        Location {
+            depth: 1,
+            offset: 0
+        }
+    );
+    assert_eq!(
+        Location::from(Index(2)),
+        Location {
+            depth: 1,
+            offset: 1
+        }
+    );
+    assert_eq!(
+        Location::from(Index(3)),
+        Location {
+            depth: 2,
+            offset: 0
+        }
+    );
+    assert_eq!(
+        Location::from(Index(4)),
+        Location {
+            depth: 2,
+            offset: 1
+        }
+    );
+    assert_eq!(
+        Location::from(Index(5)),
+        Location {
+            depth: 2,
+            offset: 2
+        }
+    );
+    assert_eq!(
+        Location::from(Index(6)),
+        Location {
+            depth: 2,
+            offset: 3
+        }
+    );
+    assert_eq!(
+        Location::from(Index(7)),
+        Location {
+            depth: 3,
+            offset: 0
+        }
+    );
+    assert_eq!(
+        Location::from(Index(8)),
+        Location {
+            depth: 3,
+            offset: 1
+        }
+    );
+    assert_eq!(
+        Location::from(Index(9)),
+        Location {
+            depth: 3,
+            offset: 2
+        }
+    );
+    assert_eq!(
+        Location::from(Index(10)),
+        Location {
+            depth: 3,
+            offset: 3
+        }
+    );
+    assert_eq!(
+        Location::from(Index(11)),
+        Location {
+            depth: 3,
+            offset: 4
+        }
+    );
+    assert_eq!(
+        Location::from(Index(12)),
+        Location {
+            depth: 3,
+            offset: 5
+        }
+    );
+    assert_eq!(
+        Location::from(Index(13)),
+        Location {
+            depth: 3,
+            offset: 6
+        }
+    );
+    assert_eq!(
+        Location::from(Index(14)),
+        Location {
+            depth: 3,
+            offset: 7
+        }
+    );
+}

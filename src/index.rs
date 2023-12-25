@@ -13,3 +13,12 @@ impl From<Location> for Index {
         Index(index)
     }
 }
+
+impl From<Index> for Location {
+    fn from(index: Index) -> Self {
+        let index = index.0;
+        let depth = f64::from(1 + index).log2().floor() as u32;
+        let offset = index + 1 - 2_u32.pow(depth);
+        Location { depth, offset }
+    }
+}
