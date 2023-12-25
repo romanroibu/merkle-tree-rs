@@ -39,4 +39,10 @@ impl Index {
 
         Option::Some(Index(parent))
     }
+
+    pub fn left_child(&self) -> Index {
+        let index = self.0;
+        let child = (index * 2) + 1;
+        Index(child)
+    }
 }

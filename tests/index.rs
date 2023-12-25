@@ -236,3 +236,14 @@ fn test_parent_index_from_index() {
     assert_eq!(Index(13).parent(), Option::Some(Index(6)));
     assert_eq!(Index(14).parent(), Option::Some(Index(6)));
 }
+
+#[test]
+fn test_left_child_index_from_index() {
+    assert_eq!(Index(0).left_child(), Index(1));
+    assert_eq!(Index(1).left_child(), Index(3));
+    assert_eq!(Index(2).left_child(), Index(5));
+    assert_eq!(Index(3).left_child(), Index(7));
+    assert_eq!(Index(4).left_child(), Index(9));
+    assert_eq!(Index(5).left_child(), Index(11));
+    assert_eq!(Index(6).left_child(), Index(13));
+}
