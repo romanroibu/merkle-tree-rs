@@ -22,3 +22,21 @@ impl From<Index> for Location {
         Location { depth, offset }
     }
 }
+
+impl Index {
+    pub fn parent(&self) -> Option<Index> {
+        let index = self.0;
+
+        if index == 0 {
+            return Option::None;
+        }
+
+        let parent = if index % 2 == 0 {
+            (index - 2) / 2
+        } else {
+            (index - 1) / 2
+        };
+
+        Option::Some(Index(parent))
+    }
+}

@@ -217,3 +217,22 @@ fn test_location_from_index() {
         }
     );
 }
+
+#[test]
+fn test_parent_index_from_index() {
+    assert_eq!(Index(0).parent(), Option::None);
+    assert_eq!(Index(1).parent(), Option::Some(Index(0)));
+    assert_eq!(Index(2).parent(), Option::Some(Index(0)));
+    assert_eq!(Index(3).parent(), Option::Some(Index(1)));
+    assert_eq!(Index(4).parent(), Option::Some(Index(1)));
+    assert_eq!(Index(5).parent(), Option::Some(Index(2)));
+    assert_eq!(Index(6).parent(), Option::Some(Index(2)));
+    assert_eq!(Index(7).parent(), Option::Some(Index(3)));
+    assert_eq!(Index(8).parent(), Option::Some(Index(3)));
+    assert_eq!(Index(9).parent(), Option::Some(Index(4)));
+    assert_eq!(Index(10).parent(), Option::Some(Index(4)));
+    assert_eq!(Index(11).parent(), Option::Some(Index(5)));
+    assert_eq!(Index(12).parent(), Option::Some(Index(5)));
+    assert_eq!(Index(13).parent(), Option::Some(Index(6)));
+    assert_eq!(Index(14).parent(), Option::Some(Index(6)));
+}
