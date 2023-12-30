@@ -34,15 +34,19 @@ impl<H: NodeHash> Node<H> {
                 let child = Node::new(n - 1, initial_leaf);
                 let child_hash = child.hash();
 
-                let mut hasher = Sha3_256::new();
-                hasher.update(child_hash);
-                hasher.update(child_hash);
-                let hash = hasher.finalize().into();
-
+                let hash = Node::sha3(child_hash, child_hash);
                 let left = Box::new(child.clone());
                 let right = Box::new(child);
                 Node::Branch { hash, left, right }
             }
         }
+    }
+
+    fn sha3(x: &H, y: &H) -> H {
+        let mut hasher = Sha3_256::new();
+        hasher.update(x);
+        hasher.update(y);
+        let hash: [u8; 32] = hasher.finalize().into();
+        H::from(hash)
     }
 }
