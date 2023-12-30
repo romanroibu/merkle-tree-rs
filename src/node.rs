@@ -19,6 +19,14 @@ pub(crate) enum NodeError {
     InvalidTree,
 }
 
+#[derive(Debug, PartialEq)]
+pub enum ProofNode<H: NodeHash> {
+    Left { sibling: H },
+    Right { sibling: H },
+}
+
+pub type Proof<H> = Vec<ProofNode<H>>;
+
 impl<H: NodeHash> Node<H> {
     pub(crate) fn hash(&self) -> &H {
         match *self {
