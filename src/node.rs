@@ -14,6 +14,11 @@ pub(crate) enum Node<H: NodeHash> {
     },
 }
 
+#[derive(Debug)]
+pub(crate) enum NodeError {
+    InvalidTree,
+}
+
 impl<H: NodeHash> Node<H> {
     pub(crate) fn hash(&self) -> &H {
         match *self {
