@@ -1,5 +1,7 @@
-use hex_lit::hex;
 use merkle_tree::MerkleTree;
+
+mod hex_value;
+use hex_value::HexValue;
 
 #[test]
 fn test_tree_new_with_depth_0() {
