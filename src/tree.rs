@@ -20,4 +20,9 @@ impl<H: NodeHash> MerkleTree<H> {
     pub fn num_leaves(&self) -> u64 {
         2_u64.pow(self.depth)
     }
+
+    pub fn set(&mut self, leaf_index: u32, leaf_value: H) {
+        let root = self.root_node.as_mut();
+        root.set_leaf(self.depth, leaf_index, leaf_value).unwrap();
+    }
 }

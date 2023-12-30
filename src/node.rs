@@ -42,6 +42,39 @@ impl<H: NodeHash> Node<H> {
         }
     }
 
+    pub(crate) fn set_leaf(
+        &mut self,
+        depth: u32,
+        leaf_index: u32,
+        leaf_value: H,
+    ) -> Result<(), NodeError> {
+        match (self, depth) {
+            (Node::Leaf { ref mut hash }, 0) => {
+                *hash = leaf_value;
+                Ok(())
+            }
+            (
+                Node::Branch {
+                    ref mut hash,
+                    ref mut left,
+                    ref mut right,
+                },
+                1..,
+            ) => {
+                let brach_left = leaf_index & (0b1 << (depth - 1)) == 0;
+
+                if brach_left {
+                    left.set_leaf(depth - 1, leaf_index, leaf_value)?;
+                } else {
+                    right.set_leaf(depth - 1, leaf_index, leaf_value)?;
+                };
+                *hash = Node::sha3(left.hash(), right.hash());
+                Ok(())
+            }
+            _ => Err(NodeError::InvalidTree),
+        }
+    }
+
     fn sha3(x: &H, y: &H) -> H {
         let mut hasher = Sha3_256::new();
         hasher.update(x);
