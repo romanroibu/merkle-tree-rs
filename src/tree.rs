@@ -1,4 +1,4 @@
-use crate::node::{Node, NodeHash};
+use crate::node::{Node, NodeHash, Proof};
 
 #[derive(Debug)]
 pub struct MerkleTree<H: NodeHash> {
@@ -24,5 +24,13 @@ impl<H: NodeHash> MerkleTree<H> {
     pub fn set(&mut self, leaf_index: u32, leaf_value: H) {
         let root = self.root_node.as_mut();
         root.set_leaf(self.depth, leaf_index, leaf_value).unwrap();
+    }
+
+    pub fn proof(&self, leaf_index: u32) -> Proof<H> {
+        let mut proof = Vec::with_capacity(self.depth as usize);
+        self.root_node
+            .generate_proof(self.depth, leaf_index, &mut proof)
+            .unwrap();
+        proof
     }
 }

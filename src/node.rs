@@ -83,6 +83,40 @@ impl<H: NodeHash> Node<H> {
         }
     }
 
+    pub(crate) fn generate_proof(
+        &self,
+        depth: u32,
+        leaf_index: u32,
+        acc: &mut Proof<H>,
+    ) -> Result<(), NodeError> {
+        match (self, depth) {
+            (Node::Leaf { .. }, 0) => Ok(()),
+            (
+                Node::Branch {
+                    ref left,
+                    ref right,
+                    ..
+                },
+                1..,
+            ) => {
+                let brach_left = leaf_index & (0b1 << (depth - 1)) == 0;
+                if brach_left {
+                    left.generate_proof(depth - 1, leaf_index, acc)?;
+                    acc.push(ProofNode::Left {
+                        sibling: right.hash().clone(),
+                    });
+                } else {
+                    right.generate_proof(depth - 1, leaf_index, acc)?;
+                    acc.push(ProofNode::Right {
+                        sibling: left.hash().clone(),
+                    });
+                };
+                Ok(())
+            }
+            _ => Err(NodeError::InvalidTree),
+        }
+    }
+
     fn sha3(x: &H, y: &H) -> H {
         let mut hasher = Sha3_256::new();
         hasher.update(x);
