@@ -1,0 +1,80 @@
+use merkle_tree::MerkleTree;
+
+mod hex_value;
+use hex_value::HexValue;
+
+#[test]
+fn test_tree_set_with_depth_4() {
+    let initial_leaf = hex!("0000000000000000000000000000000000000000000000000000000000000000");
+    let mut tree = MerkleTree::new(4, initial_leaf.into());
+
+    tree.set(
+        0,
+        hex!("0000000000000000000000000000000000000000000000000000000000000000"),
+    );
+    tree.set(
+        1,
+        hex!("1111111111111111111111111111111111111111111111111111111111111111"),
+    );
+    tree.set(
+        2,
+        hex!("2222222222222222222222222222222222222222222222222222222222222222"),
+    );
+    tree.set(
+        3,
+        hex!("3333333333333333333333333333333333333333333333333333333333333333"),
+    );
+    tree.set(
+        4,
+        hex!("4444444444444444444444444444444444444444444444444444444444444444"),
+    );
+    tree.set(
+        5,
+        hex!("5555555555555555555555555555555555555555555555555555555555555555"),
+    );
+    tree.set(
+        6,
+        hex!("6666666666666666666666666666666666666666666666666666666666666666"),
+    );
+    tree.set(
+        7,
+        hex!("7777777777777777777777777777777777777777777777777777777777777777"),
+    );
+    tree.set(
+        8,
+        hex!("8888888888888888888888888888888888888888888888888888888888888888"),
+    );
+    tree.set(
+        9,
+        hex!("9999999999999999999999999999999999999999999999999999999999999999"),
+    );
+    tree.set(
+        10,
+        hex!("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
+    );
+    tree.set(
+        11,
+        hex!("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
+    );
+    tree.set(
+        12,
+        hex!("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
+    );
+    tree.set(
+        13,
+        hex!("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"),
+    );
+    tree.set(
+        14,
+        hex!("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"),
+    );
+    tree.set(
+        15,
+        hex!("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"),
+    );
+
+    let proof = tree.proof(3);
+    let leaf_3 = hex!("3333333333333333333333333333333333333333333333333333333333333333");
+
+    assert_eq!(&MerkleTree::verify(&proof, leaf_3), tree.root());
+}

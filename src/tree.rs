@@ -33,4 +33,8 @@ impl<H: NodeHash> MerkleTree<H> {
             .unwrap();
         proof
     }
+
+    pub fn verify(proof: &Proof<H>, leaf_value: H) -> H {
+        Node::verify(proof, leaf_value)
+    }
 }

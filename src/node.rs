@@ -117,6 +117,21 @@ impl<H: NodeHash> Node<H> {
         }
     }
 
+    pub(crate) fn verify(proof: &Proof<H>, leaf_value: H) -> H {
+        let mut hash = leaf_value;
+        for node in proof {
+            match node {
+                ProofNode::Left { sibling } => {
+                    hash = Node::sha3(&hash, sibling);
+                }
+                ProofNode::Right { sibling } => {
+                    hash = Node::sha3(sibling, &hash);
+                }
+            }
+        }
+        hash
+    }
+
     fn sha3(x: &H, y: &H) -> H {
         let mut hasher = Sha3_256::new();
         hasher.update(x);
