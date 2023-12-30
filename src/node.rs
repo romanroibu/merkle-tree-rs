@@ -1,28 +1,28 @@
 use sha3::{Digest, Sha3_256};
 
-pub type Hash256 = [u8; 32];
+pub trait NodeHash: AsRef<[u8]> + From<[u8; 32]> + Into<[u8; 32]> + Clone {}
 
 #[derive(Clone, Debug)]
-pub(crate) enum Node {
+pub(crate) enum Node<H: NodeHash> {
     Leaf {
-        hash: Hash256,
+        hash: H,
     },
     Branch {
-        hash: Hash256,
-        left: Box<Node>,
-        right: Box<Node>,
+        hash: H,
+        left: Box<Node<H>>,
+        right: Box<Node<H>>,
     },
 }
 
-impl Node {
-    pub(crate) fn hash(&self) -> &Hash256 {
+impl<H: NodeHash> Node<H> {
+    pub(crate) fn hash(&self) -> &H {
         match *self {
             Node::Leaf { ref hash, .. } => hash,
             Node::Branch { ref hash, .. } => hash,
         }
     }
 
-    pub(crate) fn new(depth: usize, initial_leaf: Hash256) -> Self {
+    pub(crate) fn new(depth: u32, initial_leaf: H) -> Self {
         match depth {
             0 => Node::Leaf { hash: initial_leaf },
             n => {

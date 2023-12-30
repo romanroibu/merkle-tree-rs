@@ -1,17 +1,18 @@
-use crate::node::{Hash256, Node};
+use crate::node::{Node, NodeHash};
+
 #[derive(Debug)]
-pub struct MerkleTree {
-    root_node: Box<Node>,
+pub struct MerkleTree<H: NodeHash> {
+    root_node: Box<Node<H>>,
 }
 
-impl MerkleTree {
-    pub fn new(depth: usize, initial_leaf: Hash256) -> Self {
+impl<H: NodeHash> MerkleTree<H> {
+    pub fn new(depth: u32, initial_leaf: H) -> Self {
         let root_node = Node::new(depth, initial_leaf);
         let root_node = Box::new(root_node);
         MerkleTree { root_node }
     }
 
-    pub fn root(&self) -> &Hash256 {
+    pub fn root(&self) -> &H {
         self.root_node.hash()
     }
 }
