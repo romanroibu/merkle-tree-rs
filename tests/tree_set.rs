@@ -8,7 +8,7 @@ fn test_tree_set_with_depth_0() {
     let initial_leaf = hex!("0000000000000000000000000000000000000000000000000000000000000000");
     let updated_leaf = hex!("1111111111111111111111111111111111111111111111111111111111111111");
 
-    let mut tree = MerkleTree::new(0, initial_leaf.clone());
+    let mut tree = MerkleTree::new(0, initial_leaf.clone()).unwrap();
     assert_eq!(tree.root(), &initial_leaf);
 
     tree.set(0, updated_leaf.clone());
@@ -20,7 +20,7 @@ fn test_tree_set_with_depth_1() {
     let initial_leaf = hex!("0000000000000000000000000000000000000000000000000000000000000000");
     let updated_leaf = hex!("1111111111111111111111111111111111111111111111111111111111111111");
 
-    let mut tree = MerkleTree::new(1, initial_leaf.clone());
+    let mut tree = MerkleTree::new(1, initial_leaf.clone()).unwrap();
     assert_eq!(
         tree.root(),
         &hex!("070fa1ab6fcc557ed14d42941f1967693048551eb9042a8d0a057afbd75e81e0")
@@ -48,10 +48,8 @@ fn test_tree_set_with_depth_1() {
 
 #[test]
 fn test_tree_set_example_1_depth_1() {
-    let mut tree = MerkleTree::new(
-        1,
-        hex!("0000000000000000000000000000000000000000000000000000000000000000").into(),
-    );
+    let initial_leaf = hex!("0000000000000000000000000000000000000000000000000000000000000000");
+    let mut tree = MerkleTree::new(1, initial_leaf).unwrap();
     tree.set(
         0,
         hex!("0000000000000000000000000000000000000000000000000000000000000000"),
@@ -67,8 +65,9 @@ fn test_tree_set_example_1_depth_1() {
 
     let mut tree = MerkleTree::new(
         1,
-        hex!("0000000000000000000000000000000000000000000000000000000000000000").into(),
-    );
+        hex!("0000000000000000000000000000000000000000000000000000000000000000"),
+    )
+    .unwrap();
     tree.set(
         0,
         hex!("2222222222222222222222222222222222222222222222222222222222222222"),
@@ -86,7 +85,7 @@ fn test_tree_set_example_1_depth_1() {
 #[test]
 fn test_tree_set_with_depth_4() {
     let initial_leaf = hex!("0000000000000000000000000000000000000000000000000000000000000000");
-    let mut tree = MerkleTree::new(4, initial_leaf.into());
+    let mut tree = MerkleTree::new(4, initial_leaf).unwrap();
 
     tree.set(
         0,

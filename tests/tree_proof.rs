@@ -7,7 +7,7 @@ use hex_value::HexValue;
 #[test]
 fn test_tree_set_with_depth_4() {
     let initial_leaf = hex!("0000000000000000000000000000000000000000000000000000000000000000");
-    let mut tree = MerkleTree::new(4, initial_leaf.into());
+    let mut tree = MerkleTree::new(4, initial_leaf).unwrap();
 
     tree.set(
         0,

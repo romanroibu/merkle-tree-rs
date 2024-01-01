@@ -1,4 +1,8 @@
+use thiserror::Error;
+
 use crate::node::{Node, NodeHash, Proof};
+
+pub const MAX_TREE_DEPTH: u32 = 29;
 
 #[derive(Debug)]
 pub struct MerkleTree<H: NodeHash> {
@@ -6,11 +10,20 @@ pub struct MerkleTree<H: NodeHash> {
     root_node: Box<Node<H>>,
 }
 
+#[derive(Debug, Error, PartialEq)]
+pub enum MerkleTreeInitError {
+    #[error("{0} exceeds maximal tree depth")]
+    TooDeep(u32),
+}
+
 impl<H: NodeHash> MerkleTree<H> {
-    pub fn new(depth: u32, initial_leaf: H) -> Self {
+    pub fn new(depth: u32, initial_leaf: H) -> Result<Self, MerkleTreeInitError> {
+        if depth > MAX_TREE_DEPTH {
+            return Err(MerkleTreeInitError::TooDeep(depth));
+        }
         let root_node = Node::new(depth, initial_leaf);
         let root_node = Box::new(root_node);
-        MerkleTree { depth, root_node }
+        Ok(MerkleTree { depth, root_node })
     }
 
     pub fn root(&self) -> &H {
