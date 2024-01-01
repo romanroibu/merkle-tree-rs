@@ -16,6 +16,12 @@ pub enum MerkleTreeInitError {
     TooDeep(u32),
 }
 
+#[derive(Debug, Error, PartialEq)]
+pub enum MerkleTreeAccessError {
+    #[error("leaf index {0} out of bounds")]
+    IndexOutOfBounds(u32),
+}
+
 impl<H: NodeHash> MerkleTree<H> {
     pub fn new(depth: u32, initial_leaf: H) -> Result<Self, MerkleTreeInitError> {
         if depth > MAX_TREE_DEPTH {
@@ -34,17 +40,24 @@ impl<H: NodeHash> MerkleTree<H> {
         2_u64.pow(self.depth)
     }
 
-    pub fn set(&mut self, leaf_index: u32, leaf_value: H) {
+    pub fn set(&mut self, leaf_index: u32, leaf_value: H) -> Result<(), MerkleTreeAccessError> {
+        if (leaf_index as u64) >= self.num_leaves() {
+            return Err(MerkleTreeAccessError::IndexOutOfBounds(leaf_index));
+        }
         let root = self.root_node.as_mut();
         root.set_leaf(self.depth, leaf_index, leaf_value).unwrap();
+        Ok(())
     }
 
-    pub fn proof(&self, leaf_index: u32) -> Proof<H> {
+    pub fn proof(&self, leaf_index: u32) -> Result<Proof<H>, MerkleTreeAccessError> {
+        if (leaf_index as u64) >= self.num_leaves() {
+            return Err(MerkleTreeAccessError::IndexOutOfBounds(leaf_index));
+        }
         let mut proof = Vec::with_capacity(self.depth as usize);
         self.root_node
             .generate_proof(self.depth, leaf_index, &mut proof)
             .unwrap();
-        proof
+        Ok(proof)
     }
 
     pub fn verify(proof: &Proof<H>, leaf_value: H) -> H {

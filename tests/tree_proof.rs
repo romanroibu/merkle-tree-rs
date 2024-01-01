@@ -1,81 +1,81 @@
-use merkle_tree::MerkleTree;
 use merkle_tree::ProofNode::{Left, Right};
+use merkle_tree::{MerkleTree, MerkleTreeAccessError};
 
 mod hex_value;
 use hex_value::HexValue;
 
 #[test]
-fn test_tree_set_with_depth_4() {
+fn test_tree_proof_with_depth_4() -> Result<(), MerkleTreeAccessError> {
     let initial_leaf = hex!("0000000000000000000000000000000000000000000000000000000000000000");
     let mut tree = MerkleTree::new(4, initial_leaf).unwrap();
 
     tree.set(
         0,
         hex!("0000000000000000000000000000000000000000000000000000000000000000"),
-    );
+    )?;
     tree.set(
         1,
         hex!("1111111111111111111111111111111111111111111111111111111111111111"),
-    );
+    )?;
     tree.set(
         2,
         hex!("2222222222222222222222222222222222222222222222222222222222222222"),
-    );
+    )?;
     tree.set(
         3,
         hex!("3333333333333333333333333333333333333333333333333333333333333333"),
-    );
+    )?;
     tree.set(
         4,
         hex!("4444444444444444444444444444444444444444444444444444444444444444"),
-    );
+    )?;
     tree.set(
         5,
         hex!("5555555555555555555555555555555555555555555555555555555555555555"),
-    );
+    )?;
     tree.set(
         6,
         hex!("6666666666666666666666666666666666666666666666666666666666666666"),
-    );
+    )?;
     tree.set(
         7,
         hex!("7777777777777777777777777777777777777777777777777777777777777777"),
-    );
+    )?;
     tree.set(
         8,
         hex!("8888888888888888888888888888888888888888888888888888888888888888"),
-    );
+    )?;
     tree.set(
         9,
         hex!("9999999999999999999999999999999999999999999999999999999999999999"),
-    );
+    )?;
     tree.set(
         10,
         hex!("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
-    );
+    )?;
     tree.set(
         11,
         hex!("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
-    );
+    )?;
     tree.set(
         12,
         hex!("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
-    );
+    )?;
     tree.set(
         13,
         hex!("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"),
-    );
+    )?;
     tree.set(
         14,
         hex!("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"),
-    );
+    )?;
     tree.set(
         15,
         hex!("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"),
-    );
+    )?;
 
     assert_eq!(
-        tree.proof(3),
+        tree.proof(3)?,
         vec![
             Right {
                 sibling: hex!("2222222222222222222222222222222222222222222222222222222222222222")
@@ -91,4 +91,21 @@ fn test_tree_set_with_depth_4() {
             },
         ]
     );
+    Ok(())
+}
+
+#[test]
+fn test_tree_proof_with_invalid_index() -> Result<(), MerkleTreeAccessError> {
+    let initial_leaf = hex!("0000000000000000000000000000000000000000000000000000000000000000");
+    let tree = MerkleTree::new(4, initial_leaf).unwrap();
+
+    let bad_index = 1234567890_u32;
+
+    let proof_result = tree.proof(bad_index);
+    assert!(proof_result.is_err());
+    assert_eq!(
+        proof_result.unwrap_err(),
+        MerkleTreeAccessError::IndexOutOfBounds(bad_index)
+    );
+    Ok(())
 }
