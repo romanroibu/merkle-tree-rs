@@ -1,4 +1,6 @@
-# [Merkle Tree](https://github.com/romanroibu/tfh-merkle-tree-rs/)
+# [Merkle Tree](https://github.com/romanroibu/merkle-tree-rs/)
+
+Basic implementation of a Merkle Tree in Rust.
 
 ## Example
 
